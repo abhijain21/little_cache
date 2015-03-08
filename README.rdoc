@@ -10,9 +10,9 @@ Testing implementation of cached version of has_many assoc.
   <tt>rake db:setup</tt>
 
 * Usage:
-  <tt>user = User.first
-  user.cached_posts # fires a SQL query
-  user.cached_posts # doesn't fire a query when called second time
-
-  Post.create(content: "Hello world", user: user) # deletes the cache
-  user.cached_posts # Fires SQL again and caches the results.</tt>
+    user = User.first
+    user.cached_posts # fires a SQL query
+    user.cached_posts # doesn't fire a query when called second time
+  
+    Post.create(content: "Hello world", user: user) # deletes the cache
+    user.cached_posts # Fires SQL again and caches the results.
