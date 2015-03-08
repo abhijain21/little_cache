@@ -22,5 +22,10 @@ module LittleCache
 
     # Do not swallow errors in after_commit/after_rollback callbacks.
     config.active_record.raise_in_transactional_callbacks = true
+    config.autoload_paths << Rails.root.join('lib')
+
+    if defined?(Hirb)
+        Hirb.enable({:width => 155, :height => 500})
+    end
   end
 end
