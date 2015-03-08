@@ -4,22 +4,20 @@ Testing implementation of cached version of has_many assoc.
 
 * Ruby version: 1.9.3
 
-* System dependencies
+* System dependencies: memcached
 
-* Configuration
+* Setup:
+<tt>
+  rake db:setup
+</tt>
 
-* Database creation
+* Usage:
 
-* Database initialization
+<tt>
+  user = User.first
+  user.cached_posts # fires a SQL query
+  user.cached_posts # doesn't fire a query when called second time
 
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
-
-
-Please feel free to use a different markup language if you do not plan to run
-<tt>rake doc:app</tt>.
+  Post.create(content: "Hello world", user: user) # deletes the cache
+  user.cached_posts # Fires SQL again and caches the results.
+</tt>
