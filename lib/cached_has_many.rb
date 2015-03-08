@@ -47,10 +47,11 @@ module HasManyExtension
       before_update do
         associations.each do |assoc|
           obj = self.class.reflect_on_association(assoc).klass.find(self.send("#{self.class.reflect_on_association(assoc).foreign_key}_was"))
-          puts "#{obj.class} id #{obj.id}"
           if self.send("#{self.class.reflect_on_association(assoc).foreign_key}_changed?")
-            puts "deleting the cache... #{obj.get_cache_key(self, assoc)} if exists"
-            Rails.cache.delete(obj.get_cache_key(self, assoc)) if Rails.cache.exist?(obj.get_cache_key(self, assoc))
+            if Rails.cache.exist?(obj.get_cache_key(self, assoc))
+              puts "deleting the cache... #{obj.get_cache_key(self, assoc)}"
+              Rails.cache.delete(obj.get_cache_key(self, assoc))
+            end
           end
       end
       end
@@ -58,8 +59,10 @@ module HasManyExtension
       after_commit do
         associations.each do |assoc|
           obj = self.send(assoc)
-          puts "deleting the cache... #{obj.get_cache_key(self, assoc)} if exists"
-          Rails.cache.delete(obj.get_cache_key(self, assoc)) if Rails.cache.exist?(obj.get_cache_key(self, assoc))
+          if Rails.cache.exist?(obj.get_cache_key(self, assoc))
+            puts "deleting the cache... #{obj.get_cache_key(self, assoc)} if exists"
+            Rails.cache.delete(obj.get_cache_key(self, assoc))
+          end
         end
       end
     end
